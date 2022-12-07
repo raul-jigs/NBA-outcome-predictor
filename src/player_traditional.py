@@ -1,11 +1,22 @@
 # import library
 import pandas as pd
-import torch
 import numpy as np
+import sklearn
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, log_loss
+from sklearn.neural_network import MLPClassifier
+from sklearn.svm import LinearSVC
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+
+
+import torch
 import matplotlib.pyplot as plt
 # defining dataset class
 from torch.utils.data import Dataset, DataLoader
-from pytorchtools import EarlyStopping
+# from pytorchtools import EarlyStopping
 
 # defining the network
 from torch import nn
@@ -55,7 +66,7 @@ pd.set_option('display.max_columns', 500)
 pd.set_option('display.max_rows', 500)
 
 # read the traditional data
-df = pd.read_csv('../data/NBA_Traditional_Stats_Dataset.csv')
+df = pd.read_csv('../data/NBA_Traditional_Stats_Dataset_new.csv')
 
 # check if there's missing data
 total = df.isnull().sum().sort_values(ascending=False)
@@ -121,7 +132,7 @@ loss_fn = nn.BCELoss()
 
 def train_model(model, patience, n_epoch):
   
-  early_stopping = EarlyStopping(patience=patience, verbose=True)
+  # early_stopping = EarlyStopping(patience=patience, verbose=True)
   valid_losses = []
   avg_valid_losses = [] 
   losses_all = []
@@ -164,11 +175,11 @@ def train_model(model, patience, n_epoch):
       if i%50 == 0:
         print("epoch {} average train accuracy: {} average loss: {} test accuracy : {}".format(i, accur_all[-1], losses_all[-1],acc))
         
-      early_stopping(loss, model)
-      if early_stopping.early_stop:
-        print("epoch {} average train accuracy: {} average loss: {} test accuracy : {}".format(i, accur_all[-1], losses_all[-1],acc))
-        print("Early stopping")
-        break
+      #early_stopping(loss, model)
+      #if early_stopping.early_stop:
+        #print("epoch {} average train accuracy: {} average loss: {} test accuracy : {}".format(i, accur_all[-1], losses_all[-1],acc))
+        #print("Early stopping")
+        #break
 
 
 
@@ -186,3 +197,5 @@ def train_model(model, patience, n_epoch):
   plt.ylabel('accuracy')
   plt.savefig("./accuracy.png")
   plt.show()
+
+train_model(model, 2, epochs)
