@@ -157,15 +157,18 @@ def train_model(model, patience, n_epoch):
 
       model.eval()
       with torch.no_grad():
-          output = model(x_test)
-          loss = loss_fn(output,y_test.reshape(-1,1))
-          acc = (output.reshape(-1).detach().numpy().round() == y_test.numpy()).mean()
-    if i%50 == 0:
-      print("epoch {} average train accuracy: {} average loss: {} test accuracy : {}".format(i, accur_all[-1], losses_all[-1],acc))
-    early_stopping(loss, model)
-    if early_stopping.early_stop:
-      print("Early stopping")
-      break
+        output = model(x_test)
+        loss = loss_fn(output,y_test.reshape(-1,1))
+        acc = (output.reshape(-1).detach().numpy().round() == y_test.numpy()).mean()
+        
+      if i%50 == 0:
+        print("epoch {} average train accuracy: {} average loss: {} test accuracy : {}".format(i, accur_all[-1], losses_all[-1],acc))
+        
+      early_stopping(loss, model)
+      if early_stopping.early_stop:
+        print("epoch {} average train accuracy: {} average loss: {} test accuracy : {}".format(i, accur_all[-1], losses_all[-1],acc))
+        print("Early stopping")
+        break
 
 
 
